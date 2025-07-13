@@ -71,7 +71,7 @@ async def get_wallet_ids() -> list[str]:
     """Get a list of wallet IDs from environment variables.
     
     Returns:
-        A list of wallet IDs from WALLET_ID and WALLET_ID2 environment variables
+        A list of wallet IDs belong to this account.  
     """
     wallet_id = os.getenv("WALLET_ID")
     wallet_id2 = os.getenv("WALLET_ID2")
@@ -86,19 +86,50 @@ async def get_wallet_ids() -> list[str]:
     
     return wallet_ids
 
+@mcp.tool()
+async def prepare_transfer(amounts: float, destination_address: str, token_id: str, wallet_id: str) -> str:
+    """Prepare a transfer by generating a link to approve the transaction.
+    The user goes to the link to approve the transaction.  
+    We want the transactions to be subject to user approval.  
+    
+    Args:
+        amounts: The amount to transfer (supports decimals)
+        destination_address: The destination address for the transfer
+        token_id: The ID of the token to transfer
+        wallet_id: The ID of the wallet to transfer from
+        
+    Returns:
+        A link to the approval page with the parameters as GET parameters
+    """
+    from urllib.parse import urlencode
+    
+    # Prepare the parameters for the URL
+    params = {
+        'amounts': str(amounts),
+        'destination_address': destination_address,
+        'token_id': token_id,
+        'wallet_id': wallet_id
+    }
+    
+    # Generate the URL with parameters
+    query_string = urlencode(params)
+    link = f"localhost:5555/approve_transfer.html?{query_string}"
+    
+    return link
+
 # for security reason, this function is not part of the MCP server. 
 # The actual transfer of money will require confirmation from user. 
 # this function is therefore not easily accessible to the LLM.  
 # @mcp.tool()
 # async def initiate_transfer(amounts: float, destination_address: str, token_id: str, wallet_id: str) -> str:
 #     """Initiate a transfer transaction.
-    
+#     
 #     Args:
 #         amounts: The amount to transfer (supports decimals)
 #         destination_address: The destination address for the transfer
 #         token_id: The ID of the token to transfer
 #         wallet_id: The ID of the wallet to transfer from
-        
+#         
 #     Returns:
 #         The transfer transaction response as a string
 #     """
