@@ -215,7 +215,7 @@
         approveBtn.addEventListener('click', async () => {
             if (code) {
                 try {
-                    const response = await fetch(`http://127.0.0.1:8000/confirm?code=${code}`);
+                    const response = await fetch(`http://localhost:8000/confirm?code=${code}`);
                     const data = await response.json();
                     console.log('Confirm response:', data);
                     // Show success message or redirect based on response
