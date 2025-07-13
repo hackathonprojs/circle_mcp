@@ -1,6 +1,7 @@
 import os
 import uuid
 from fastapi import FastAPI, Query
+from fastapi.staticfiles import StaticFiles
 from circle.web3 import developer_controlled_wallets
 from circle.web3 import utils
 from dotenv import load_dotenv
@@ -15,9 +16,13 @@ client = utils.init_developer_controlled_wallets_client(
   entity_secret=entity_secret
 )
 
-code_to_callback = {}
-
+# Create FastAPI app
 app = FastAPI()
+
+# Serve static files from the root directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+code_to_callback = {}
 
 @app.get("/")
 async def root():
