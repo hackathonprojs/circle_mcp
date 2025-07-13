@@ -101,21 +101,23 @@ async def prepare_transfer(amounts: float, destination_address: str, token_id: s
     Returns:
         A link to the approval page with the parameters as GET parameters
     """
-    from urllib.parse import urlencode
-    
-    # Prepare the parameters for the URL
     params = {
         'amounts': str(amounts),
         'destination_address': destination_address,
         'token_id': token_id,
         'wallet_id': wallet_id
     }
+
+    url = "http://127.0.0.1:8000/transaction"
+    params = {
+        "wallet_id": wallet_id,
+        "amounts": str(amounts),
+        "destination_address": destination_address,
+        "token_id": token_id
+    }
+    response = requests.get(url, params=params)
+    return response.json()
     
-    # Generate the URL with parameters
-    query_string = urlencode(params)
-    link = f"localhost:5555/approve_transfer.html?{query_string}"
-    
-    return link
 
 # for security reason, this function is not part of the MCP server. 
 # The actual transfer of money will require confirmation from user. 
