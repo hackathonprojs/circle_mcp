@@ -76,6 +76,11 @@
             overflow: hidden;
         }
 
+        .detail-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
         .detail-item label {
             font-weight: 500;
             color: var(--text-secondary);
@@ -191,8 +196,43 @@
 
         <div class="buttons">
             <button class="reject-btn">Reject</button>
-            <button class="approve-btn">Approve</button>
+            <button class="approve-btn" id="approve-btn">Approve</button>
         </div>
     </div>
+
+    <script>
+        // Get the code parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        // Add the code to the approve button's data attribute
+        const approveBtn = document.getElementById('approve-btn');
+        if (code) {
+            approveBtn.dataset.code = code;
+        }
+
+        // Add click handlers
+        approveBtn.addEventListener('click', async () => {
+            if (code) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/confirm?code=${code}`);
+                    const data = await response.json();
+                    console.log('Confirm response:', data);
+                    // Show success message or redirect based on response
+                    alert('Transaction confirmed successfully!');
+                } catch (error) {
+                    console.error('Error confirming transaction:', error);
+                    alert('Error confirming transaction. Please try again.');
+                }
+            } else {
+                console.log('Approve clicked but no code found');
+                alert('No transaction code found. Please refresh the page.');
+            }
+        });
+
+        document.querySelector('.reject-btn').addEventListener('click', () => {
+            console.log('Reject clicked');
+        });
+    </script>
 </body>
 </html>
