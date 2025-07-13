@@ -37,7 +37,7 @@ async def transaction(
 ):
     code = str(uuid.uuid4())
     code_to_callback[code] = [amounts, destination_address, token_id, wallet_id]
-    return {"link": f"http://localhost:8000/static/token_transfer_approval.html?code={code}"}
+    return {"link": f"https://circle-transaction-server.fly.dev/static/token_transfer_approval.html?code={code}"}
 
 def post_transaction(amounts, destination_address, token_id, wallet_id):
     client = utils.init_developer_controlled_wallets_client(api_key=api_key, entity_secret=entity_secret)

@@ -108,7 +108,7 @@ async def prepare_transfer(amounts: float, destination_address: str, token_id: s
         'wallet_id': wallet_id
     }
 
-    url = "http://127.0.0.1:8000/transaction"
+    url = "https://circle-transaction-server.fly.dev/transaction"
     params = {
         "wallet_id": wallet_id,
         "amounts": str(amounts),
@@ -117,59 +117,6 @@ async def prepare_transfer(amounts: float, destination_address: str, token_id: s
     }
     response = requests.get(url, params=params)
     return response.json()
-    
-
-# for security reason, this function is not part of the MCP server. 
-# The actual transfer of money will require confirmation from user. 
-# this function is therefore not easily accessible to the LLM.  
-# @mcp.tool()
-# async def initiate_transfer(amounts: float, destination_address: str, token_id: str, wallet_id: str) -> str:
-#     """Initiate a transfer transaction.
-#     
-#     Args:
-#         amounts: The amount to transfer (supports decimals)
-#         destination_address: The destination address for the transfer
-#         token_id: The ID of the token to transfer
-#         wallet_id: The ID of the wallet to transfer from
-#         
-#     Returns:
-#         The transfer transaction response as a string
-#     """
-#     api_key = os.getenv("CIRCLE_API_KEY")
-#     entity_secret_cipher_text = os.getenv("ENTITY_SECRET_CIPHER_TEXT")
-    
-#     if not api_key or not api_key.strip():
-#         return "Error: CIRCLE_API_KEY environment variable must be set"
-    
-#     if not entity_secret_cipher_text or not entity_secret_cipher_text.strip():
-#         return "Error: ENTITY_SECRET_CIPHER_TEXT environment variable must be set"
-    
-#     url = "https://api.circle.com/v1/w3s/developer/transactions/transfer"
-    
-#     # Generate unique UUID for idempotency key
-#     # tbd: this should be passed in by the client side.  but we don't know if llm knows how to handle this yet.  this is used to prevent duplicate transaction.  
-#     idempotency_key = str(uuid.uuid4())
-    
-#     payload = {
-#         "idempotencyKey": idempotency_key,
-#         "entitySecretCipherText": entity_secret_cipher_text,
-#         "amounts": [str(amounts)],
-#         "feeLevel": "HIGH",
-#         "destinationAddress": destination_address,
-#         "tokenId": token_id,
-#         "walletId": wallet_id
-#     }
-    
-#     headers = {
-#         "Content-Type": "application/json",
-#         "Authorization": f"Bearer {api_key}"
-#     }
-    
-#     try:
-#         response = requests.post(url, json=payload, headers=headers)
-#         return response.text
-#     except requests.RequestException as e:
-#         return f"Exception when calling Circle API: {e}"
 
 if __name__ == "__main__":
     # Initialize and run the server
