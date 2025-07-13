@@ -3,9 +3,12 @@ import requests
 import uuid
 from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
+import weave
 
 # Load environment variables
 load_dotenv()
+
+weave_client = weave.init("circle-mcp")
 
 # Initialize FastMCP server
 mcp = FastMCP("circle-developer-controlled-wallet")
